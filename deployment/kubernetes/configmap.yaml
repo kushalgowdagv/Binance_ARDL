@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trading-bot-config
+data:
+  production.yaml: |
+    exchange:
+      testnet: false
+      rate_limit: 100
+    
+    strategy:
+      symbols:
+        - "ETH/USDT:USDT"
+        - "ETH/USDT:USDT-240927"
+      interval: "1m"
+      entry_threshold: -0.06
+      exit_threshold: 0.04
+      position_size: 0.004
+      max_positions: 2
+      min_confidence: 0.7
+    
+    risk:
+      max_position_size: 0.01
+      position_size_pct: 0.02
+      max_daily_loss: 100.0
+      max_drawdown: 0.10
+    
+    monitoring:
+      metrics_port: 8000
+      log_level: "INFO"
+      health_check_interval: 30

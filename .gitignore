@@ -1,0 +1,253 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Trading bot specific
+logs/
+*.log
+config/local.yaml
+config/production.yaml
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test data
+test_data/
+*.test.json
+
+# Deployment
+deployment/secrets/
+*.pem
+*.key
+*.crt
+
+
+# Makefile
+.PHONY: help install install-dev test test-cov lint format clean run run-mock docker-build docker-up docker-down
+
+help:
+	@echo "Available commands:"
+	@echo "  install      Install production dependencies"
+	@echo "  install-dev  Install development dependencies"
+	@echo "  test         Run tests"
+	@echo "  test-cov     Run tests with coverage"
+	@echo "  lint         Run linters"
+	@echo "  format       Format code"
+	@echo "  clean        Clean up temporary files"
+	@echo "  run          Run the trading bot"
+	@echo "  run-mock     Run with mock exchange"
+	@echo "  docker-build Build Docker image"
+	@echo "  docker-up    Start Docker Compose stack"
+	@echo "  docker-down  Stop Docker Compose stack"
+
+install:
+	pip install -r requirements.txt
+
+install-dev:
+	pip install -e ".[dev]"
+	pre-commit install
+
+test:
+	pytest tests/
+
+test-cov:
+	pytest --cov=src --cov-report=html --cov-report=term tests/
+
+lint:
+	flake8 src/ tests/
+	mypy src/
+	black --check src/ tests/
+
+format:
+	black src/ tests/
+	isort src/ tests/
+
+clean:
+	find . -type f -name "*.pyc" -delete
+	find . -type d -name "__pycache__" -delete
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	rm -rf .coverage htmlcov/ .pytest_cache/ .mypy_cache/
+
+run:
+	python -m src.main
+
+run-mock:
+	USE_MOCK_EXCHANGE=true python -m src.main
+
+docker-build:
+	docker build -t crypto-trading-bot:latest .
+
+docker-up:
+	docker-compose up -d
+
+docker-down:
+	docker-compose down
+
+# Database migrations (if needed)
+db-upgrade:
+	alembic upgrade head
+
+db-downgrade:
+	alembic downgrade -1
+
+# Deployment
+deploy-staging:
+	kubectl apply -f deployment/kubernetes/ -n staging
+
+deploy-production:
+	kubectl apply -f deployment/kubernetes/ -n production
+
+
+# .env.example
+# Environment
+ENVIRONMENT=development
+
+# Exchange Configuration
+BINANCE_API_KEY=your-api-key-here
+BINANCE_API_SECRET=your-api-secret-here
+USE_MOCK_EXCHANGE=false
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379
+
+# PostgreSQL Configuration (optional)
+DATABASE_URL=postgresql://trader:password@localhost:5432/trading
+
+# Monitoring
+LOG_LEVEL=INFO
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+# Trading Parameters (optional overrides)
+MAX_POSITION_SIZE=0.01
+MAX_DAILY_LOSS=100.0
+POSITION_SIZE_PCT=0.02
