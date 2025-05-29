@@ -1,0 +1,103 @@
+# config/development.yaml
+exchange:
+  api_key: "your-dev-api-key"
+  api_secret: "your-dev-api-secret"
+  testnet: true
+  rate_limit: 50
+
+strategy:
+  symbols:
+    - "ETH/USDT:USDT"
+    - "ETH/USDT:USDT-240927"
+  interval: "1m"
+  entry_threshold: -0.06
+  exit_threshold: 0.04
+  position_size: 0.004
+  max_positions: 1
+
+risk:
+  max_position_size: 0.004
+  position_size_pct: 0.01  # 1% of balance
+  max_daily_loss: 50.0
+  max_drawdown: 0.05  # 5%
+
+monitoring:
+  metrics_port: 8000
+  log_level: "DEBUG"
+  alert_webhook: null
+
+redis:
+  url: "redis://localhost:6379"
+  
+database:
+  url: "postgresql://trader:password@localhost:5432/trading_dev"
+
+---
+# config/staging.yaml
+exchange:
+  api_key: "${BINANCE_API_KEY}"
+  api_secret: "${BINANCE_API_SECRET}"
+  testnet: true
+  rate_limit: 75
+
+strategy:
+  symbols:
+    - "ETH/USDT:USDT"
+    - "ETH/USDT:USDT-240927"
+  interval: "1m"
+  entry_threshold: -0.06
+  exit_threshold: 0.04
+  position_size: 0.004
+  max_positions: 2
+
+risk:
+  max_position_size: 0.008
+  position_size_pct: 0.015  # 1.5% of balance
+  max_daily_loss: 75.0
+  max_drawdown: 0.075  # 7.5%
+
+monitoring:
+  metrics_port: 8000
+  log_level: "INFO"
+  alert_webhook: "${SLACK_WEBHOOK_URL}"
+
+redis:
+  url: "${REDIS_URL}"
+  
+database:
+  url: "${DATABASE_URL}"
+
+---
+# config/production.yaml
+exchange:
+  api_key: "${BINANCE_API_KEY}"
+  api_secret: "${BINANCE_API_SECRET}"
+  testnet: false
+  rate_limit: 100
+
+strategy:
+  symbols:
+    - "ETH/USDT:USDT"
+    - "ETH/USDT:USDT-240927"
+  interval: "1m"
+  entry_threshold: -0.06
+  exit_threshold: 0.04
+  position_size: 0.004
+  max_positions: 2
+
+risk:
+  max_position_size: 0.01
+  position_size_pct: 0.02  # 2% of balance
+  max_daily_loss: 100.0
+  max_drawdown: 0.10  # 10%
+
+monitoring:
+  metrics_port: 8000
+  log_level: "INFO"
+  alert_webhook: "${SLACK_WEBHOOK_URL}"
+
+redis:
+  url: "${REDIS_URL}"
+  
+database:
+  url: "${DATABASE_URL}"
